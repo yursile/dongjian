@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0px;
+            overflow: hidden;
+            font-family: Monospace;
+            font-size: 13px;
+            text-align: center;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        a {
+            color: #0078ff;
+        }
+
+        #info {
+            color: #fff;
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            padding: 5px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="container"></div>
+
+<script src="libs/myThree.js"></script>
+<script src="libs/YuControl.js"></script>
+
+<script src="libs/OrbitControls.js"></script>
+<script src="libs/GeometryUtils.js"></script>
+<script src="libs/FontUtils.js"></script>
+<script type="text/javascript" src="libs/TextGeometry.js"></script>
+
+<script type="text/javascript" src="font/gentilis_bold.typeface.js"></script>
+<script type="text/javascript" src="font/gentilis_regular.typeface.js"></script>
+
+
+
+<script>
+
+    var container;
+    var camera, controls, scene, renderer;
+    var light, pointLight;
+    var mesh;
+    var textMesh1;
+    var video,myfont;
+    var controls;
+    // (function(){
+    //     function DJ(){};
+    //     DJ.prototype = {
+    //         init:
+    //     };
+
+        
+    // })();
+
+
+
+    init();
+    animate();
+
+    function init() {
+
+        container = document.getElementById('container');
+        camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.set(0,10,0);
+        controls = new THREE.YuControls(camera);
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.0035);
+
+        var cube = new THREE.BoxGeometry(1, 15, 20);
+
+        var cube2 = new THREE.BoxGeometry(20,15,1);
+
+        var box = new THREE.BoxGeometry(100,100,100);
+
+        var sphere = new THREE.SphereGeometry(50,50,10);
+        var sphereSky = new THREE.SphereGeometry(51,50,50);
+
+        myfont ="h";
+        var textG = new THREE.TextGeometry(myfont,{font:"gentilis",size:70});
+        textMesh1 = new THREE.Mesh( textG, new THREE.MeshBasicMaterial({color: 0x00ff00}) );
+        textMesh1.position.y = -100;
+        // scene.add(textMesh1);
+
+
+        // THREE.ImageUtils.crossOrigin = "http://news.sohu.com/";
+        var cow  = THREE.ImageUtils.loadTexture("img/cow.png");
+        var material_1 = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            map: THREE.ImageUtils.loadTexture("img/cow.png")
+        });
+
+        var material_2 = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            map: THREE.ImageUtils.loadTexture("img/dog.jpg")
+        });
+        var material_3 = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            map: THREE.ImageUtils.loadTexture("img/cat.jpg")
+        });
+
+        var sky = new THREE.MeshBasicMaterial({
+            side:THREE.DoubleSide,
+            map:THREE.ImageUtils.loadTexture("img/H01.jpg")
+        });
+        var footMap = THREE.ImageUtils.loadTexture("img/footer.jpg");
+
+
+
+        mesh4 = new THREE.Mesh(cube2, material_3);
+        mesh4.position.set(40*Math.sin(-Math.PI), 20, 40*Math.cos(-Math.PI));
+        mesh4.name = "m4";
+        // mesh4.userData = new THREE.Vector3(100*Math.sin(-Math.PI),)
+
+
+
+        // mesh5 = new THREE.Mesh(cube.rotateZ(-Math.PI/6), material_3);
+         mesh5 = new THREE.Mesh(cube, material_3);
+        mesh5.position.set(40*Math.sin(-Math.PI/2), 5, 40*Math.cos(-Math.PI/2));
+         mesh5.name = "m5";
+
+         mesh6 = new THREE.Mesh(cube2, material_3);
+         mesh6.name = "m6";
+        mesh6.position.set(40*Math.sin(0), 20, 40*Math.cos(0));
+
+         mesh7 = new THREE.Mesh(cube, material_3);  
+        mesh7.position.set(40*Math.sin(Math.PI/2), 20, 40*Math.cos(Math.PI/2));
+        mesh7.name = "m7";
+
+
+        spereMesh = new THREE.Mesh(sphere,new THREE.MeshBasicMaterial({wireframe:true}));
+
+        skyMesh = new THREE.Mesh(sphereSky,sky);
+        // var boxMesh = new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0x00ff00,side:THREE.DoubleSide}));
+        // var lineMesh = new THREE.Mesh(line,new THREE.MeshBasicMaterial({wireframe:true}));
+        var boxMesh = createMesh(box);
+         function createMesh(geom) {
+
+            var materialArray = [];
+             materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+             materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+
+            materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+            materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+            materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+           
+            materialArray.push(new THREE.MeshBasicMaterial({map: footMap,side:THREE.DoubleSide}));
+            var faceMaterial = new THREE.MeshFaceMaterial(materialArray);
+            var mesh = new THREE.Mesh(geom, faceMaterial);
+
+            return mesh;
+        }
+
+
+      
+        scene.add(mesh4);
+        scene.add(mesh5);
+        scene.add(mesh6);
+        scene.add(mesh7);
+
+
+
+        var geo = new THREE.Geometry();
+        geo.vertices.push(new THREE.Vector3(40*Math.sin(-Math.PI), 20, 40*Math.cos(-Math.PI)));
+        geo.vertices.push(new THREE.Vector3(40*Math.sin(-Math.PI/2), 5, 40*Math.cos(-Math.PI/2)));
+        var linegeo = new THREE.Line(geo,new THREE.LineBasicMaterial({color:0xffff00}));
+        scene.add(linegeo);
+        // scene.add(lineMesh);
+        // scene.add(boxMesh);
+
+        // scene.add(spereMesh);
+        scene.add(skyMesh);
+        initFoot();
+
+        //  var ambiLight = new THREE.AmbientLight(0x141414);
+        // scene.add(ambiLight);
+
+
+        var helper = new THREE.GridHelper(500, 10);
+        helper.color1.setHex(0x444444);
+        helper.color2.setHex(0x444444);
+        helper.position.y = 0.1;
+        // scene.add(helper);
+
+
+        var axs = new THREE.AxisHelper(500);
+        // scene.add(axs);
+
+
+      
+
+        renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        container.innerHTML = "";
+        container.appendChild(renderer.domElement);
+
+        //
+
+        window.addEventListener('resize', onWindowResize, false);
+
+
+    }
+
+
+   
+
+
+
+
+
+
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // controls.handleResize();
+
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+    }
+
+    var count = 0;
+    function render() {
+        // count+=50;
+        // switch(count){
+        //     case 1000 :
+        //          myfont+="e";refreshText();break;
+        //     case 2000 :
+        //          myfont+="l";refreshText();break;
+        //     case 3000 :
+        //          myfont+="l";refreshText();break;
+        //     case 4000 :
+        //          myfont+="o";refreshText();break;
+        //     case 5000 :
+        //          myfont+="!";refreshText();break;
+        //     default:break;
+        // }
+        // update();
+
+        // camera.lookAt(new THREE.Vector3(0, 150, 0));
+        fadeInText();
+        // var delta = clock.getDelta(),
+                // time = clock.getElapsedTime() * 5;
+         // controls.update(delta);
+        // if(video.readyState === video.HAVE_ENOUGH_DATA){
+        //         if(vtexture) {
+        //             vtexture.needsUpdate = true;
+        //         }
+        //     }
+        controls.update();
+        renderer.render(scene, camera);
+
+    }
+
+    
+    window.addEventListener("click",select,false);
+    window.addEventListener("touchstart",select,false);
+
+    var raycaster,fuck;
+    var mouse = new THREE.Vector2();
+    var projector = new THREE.Projector();
+    function select(event){
+       // console.log(event.clientX);
+       var clientX = event.clientX||event.changedTouches[0].clientX;
+       var clientY = event.clientY||event.changedTouches[0].clientY;
+         var vector = new THREE.Vector3( (clientX / window.innerWidth ) * 2 - 1,- (clientY / window.innerHeight ) * 2 + 1);
+         projector.unprojectVector(vector,camera);
+        raycaster =  new THREE.Raycaster(camera.position,vector.sub(camera.position).normalize());
+
+        // raycaster =  new THREE.Raycaster();
+
+        // mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        // mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        // console.log(camera.position);
+        // raycaster.setFromCamera( mouse, camera );
+        var intersects = raycaster.intersectObjects( [mesh4,mesh5,mesh6,mesh7] );
+
+        if(!!intersects[0]){
+            // controls.autoRotate = false;
+            console.log(intersects[0].object.name);
+            // console.log(intersects[0].object.position);
+            // console.log(intersects[0]);
+            // camera.lookAt(intersects[0].object.position);
+        }
+    }
+
+
+     function refreshText(){
+        scene.remove(textMesh1);
+        // var ntext = new THREE.text
+        var ntext = new THREE.TextGeometry(myfont,{font:"gentilis",size:70});
+
+        var textMesh1 = new THREE.Mesh( ntext, new THREE.MeshBasicMaterial({color: 0x00ff00}) );
+        scene.add(textMesh1);
+     }
+
+
+     function fadeInText(){
+        if(textMesh1.position.y<100){
+            textMesh1.position.y+=0.1;    
+        }   
+     }
+
+
+     function initFoot(){
+        var geometry = new THREE.PlaneGeometry( 1000, 1000 );
+        geometry.rotateX(Math.PI/2);
+          var material_foot = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            map: THREE.ImageUtils.loadTexture("img/footer.jpg"),
+            side: THREE.DoubleSide
+        });
+        var plane = new THREE.Mesh( geometry, material_foot );
+        plane.position.y  = -118;
+        scene.add( plane );
+     }
+
+</script>
+
+</body>
+</html>
